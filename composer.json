@@ -1,0 +1,14 @@
+{
+  "name": "gsandbox",
+  "type": "project",
+  "description": "Amazon Glacier Sandbox",
+  "require": {
+    "aws/aws-sdk-php": "2.8.18",
+    "slim/slim": "2.6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Gsandbox\\": "src/"
+    }
+  }
+}
