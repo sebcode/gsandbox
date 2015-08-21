@@ -91,7 +91,7 @@ $app->get('/-/vaults/:vaultName/jobs/:jobID', function ($vaultName, $jobID) {
 });
 
 // Get list of jobs.
-$app->get('/-/vaults/:vaultName/jobs', function ($vaultName, $jobID) {
+$app->get('/-/vaults/:vaultName/jobs', function ($vaultName) {
   $vault = getVault($vaultName);
   $jobs = [];
 
