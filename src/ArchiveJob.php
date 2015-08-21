@@ -54,6 +54,7 @@ class ArchiveJob extends Job {
     $contentLength = $readBytes;
     $bytesWritten = 0;
     $hash = new TreeHash;
+    $data = '';
 
     while ($readBytes > 0 && !feof($f)) {
       $buf = fread($f, max($bufSize, $readBytes));
@@ -61,12 +62,15 @@ class ArchiveJob extends Job {
         return false;
       }
       $readBytes -= strlen($buf);
-      $hash->addData($buf);
+      $data .= $buf;
     }
 
+    $hash = TreeHash::fromContent($data);
     $treeHash = $hash->getHash();
-    header("x-amz-sha256-tree-hash: {$treeHash}");
     header("Content-Length: $contentLength");
+    if (static::validPartSize($contentLength)) {
+      header("x-amz-sha256-tree-hash: {$treeHash}");
+    }
 
     if (fseek($f, $from) === -1) {
       return false;
@@ -90,6 +94,11 @@ class ArchiveJob extends Job {
 
     fclose($f);
     return true;
+  }
+
+  public static function validPartSize($size) {
+    $validPartSizes = array_map(function ($value) { return pow(2, $value) * (1024 * 1024); }, range(0, 12));
+    return in_array($size, $validPartSizes);
   }
 
 }
