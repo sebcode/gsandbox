@@ -12,7 +12,15 @@ $config = include(__DIR__ . '/../config.php');
 
 $request = new Request();
 
-$app = new \Slim\Slim();
+$app = new \Slim\Slim([
+  'debug' => false,
+  #'log.level' => \Slim\Log::DEBUG,
+  #'log.enabled' => true,
+]);
+
+$app->error(function (\Exception $e) use ($app) {
+  error_log(var_export($e->getMessage(), true));//XXX
+});
 
 if ($request->accessKey === false) {
   $app->get('/', function () {
