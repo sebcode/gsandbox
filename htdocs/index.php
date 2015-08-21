@@ -141,8 +141,7 @@ $app->put('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaul
     badRequest("invalid content length (expected: $contentLength actual: $actualContentLength)");
   }
 
-  $hash = new TreeHash;
-  $hash->addData($putData);
+  $hash = TreeHash::fromContent($putData);
   $actualTreeHash = $hash->getHash();
 
   if ($treeHash !== $actualTreeHash) {
