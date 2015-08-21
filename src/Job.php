@@ -52,6 +52,16 @@ class Job extends VaultEntity {
     return null;
   }
 
+  public function hasExpired() {
+    $expireDate = $this->getCreationDate();
+    $expireDate->modify('+24 hour');
+
+    $now = new \DateTime();
+    $now->setTimezone(new \DateTimeZone("UTC"));
+
+    return $now >= $expireDate;
+  }
+
   public function getCompletionDate() {
     $completeDate = $this->getCreationDate();
 
