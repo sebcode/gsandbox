@@ -49,7 +49,7 @@ class ArchiveJob extends Job {
       return false;
     }
 
-    $bufSize = 8192;
+    $bufSize = 1024 * 1024 * 1;
     $readBytes = $to - $from + 1;
     $contentLength = $readBytes;
     $bytesWritten = 0;
@@ -67,6 +67,7 @@ class ArchiveJob extends Job {
 
     $hash = TreeHash::fromContent($data);
     $treeHash = $hash->getHash();
+    header("Content-Type: application/octet-stream");
     header("Content-Length: $contentLength");
     if (static::validPartSize($contentLength)) {
       header("x-amz-sha256-tree-hash: {$treeHash}");
@@ -79,14 +80,21 @@ class ArchiveJob extends Job {
     $readBytes = $to - $from + 1;
 
     $dumped = 0;
+    $dumpBufSize = (1024 * 1024) / 2;
     while ($readBytes > 0 && !feof($f)) {
       $buf = fread($f, max($bufSize, $readBytes));
       if ($buf === false) {
         return false;
       }
-      $readBytes -= strlen($buf);
-      $dumped += strlen($buf);
-      echo $buf;
+      while (strlen($buf)) {
+        $dump = substr($buf, 0, $dumpBufSize);
+        $buf = substr($buf, strlen($dump));
+        echo $dump;
+        flush();
+        ob_flush();
+        $dumped += strlen($dump);
+        $readBytes -= strlen($dump);
+      }
       if (isset($GLOBALS['config']['downloadThrottle'])) {
         $GLOBALS['config']['downloadThrottle']();
       }

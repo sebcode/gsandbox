@@ -146,7 +146,9 @@ class Vault {
   }
 
   public function getJob($id) {
-    $ret = Job::get($id, $this);
+    if (($ret = Job::get($id, $this)) === false) {
+      return false;
+    }
 
     if ($ret->hasExpired()) {
       $ret->delete();
