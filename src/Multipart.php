@@ -92,7 +92,7 @@ class Multipart extends VaultEntity {
 
     $total = 0;
     while (strlen($putData) > 0) {
-      $bytesWritten = fwrite($f, substr($putData, 0, 8192));
+      $bytesWritten = fwrite($f, substr($putData, 0, 1024 * 1024));
       $total += $bytesWritten;
       $putData = substr($putData, $bytesWritten);
     }
