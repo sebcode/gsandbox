@@ -78,7 +78,7 @@ class Vault {
 
   public function getNumberOfArchives() {
     $numArchives = 0;
-    foreach (glob($this->getDir() . 'archives/*') as $f) {
+    foreach (glob($this->getDir() . '/archives/*') as $f) {
       $numArchives += 1;
     }
     return $numArchives;
@@ -86,8 +86,10 @@ class Vault {
 
   public function getSizeInBytes() {
     $size = 0;
-    foreach (glob($this->getDir() . 'archives/*') as $f) {
-      $size += filesize($f);
+    foreach (glob($this->getDir() . '/archives/*') as $dir) {
+      foreach (glob($dir . '/*') as $f) {
+        $size += filesize($f);
+      }
     }
     return $size;
   }
