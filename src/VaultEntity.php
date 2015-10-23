@@ -14,7 +14,7 @@ abstract class VaultEntity {
 
     if ($id === true) {
       $this->id = md5(time().rand());
-      mkdir($this->getDir(), 0777, true);
+      @mkdir($this->getDir(), 0777, true);
     } else {
       $this->id = $id;
     }
