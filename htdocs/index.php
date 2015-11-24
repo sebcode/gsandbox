@@ -25,7 +25,6 @@ $app->error(function (\Exception $e) use ($app) {
 if ($request->accessKey === false) {
   $app->get('/', function () {
     echo 'gsandbox';
-    return200();
   });
 
   $app->get('/-/sandbox/reset/:accessID', function ($accessID) {
@@ -33,7 +32,6 @@ if ($request->accessKey === false) {
     foreach (Vault::all() as $vault) {
       $vault->delete();
     }
-    return200();
   });
 
   $app->run();
@@ -54,7 +52,7 @@ $app->delete('/-/vaults/:vaultName/archives/:archiveID', function ($vaultName, $
     $archive->delete();
   }
 
-  return204();
+  $GLOBALS['app']->response->setStatus(204);
 });
 
 // Initiate job.
@@ -66,7 +64,7 @@ $app->post('/-/vaults/:vaultName/jobs', function ($vaultName) {
   $job = $vault->createJob($params);
 
   header("x-amz-job-id: {$job->id}");
-  return201();
+  $GLOBALS['app']->response->setStatus(201);
 });
 
 // Get job output.
@@ -74,11 +72,11 @@ $app->get('/-/vaults/:vaultName/jobs/:jobID/output', function ($vaultName, $jobI
   $job = getJob($vaultName, $jobID);
 
   if (!$job->hasOutput()) {
-    notFound();
+    return notFound();
   }
 
   if (!$job->dumpOutput()) {
-    notFound();
+    return notFound();
   }
 
   exit();
@@ -116,7 +114,7 @@ $app->post('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vau
 
   header("x-amz-archive-id: {$a->id}");
 
-  return201();
+  $GLOBALS['app']->response->setStatus(201);
 });
 
 // Upload multipart part
@@ -156,7 +154,7 @@ $app->put('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaul
   }
 
   header("x-amz-sha256-tree-hash: $treeHash");
-  return201();
+  $GLOBALS['app']->response->setStatus(204);
 });
 
 // Initiate multipart upload
@@ -176,7 +174,7 @@ $app->post('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
   $m = $vault->createMultipart($partSize, $desc);
 
   header("x-amz-multipart-upload-id: {$m->id}");
-  return201();
+  $GLOBALS['app']->response->setStatus(201);
 });
 
 // Get list of multipart upload parts
@@ -203,7 +201,7 @@ $app->get('/-/vaults/:vaultName', function ($vaultName) {
   if ($v = Vault::get($vaultName)) {
     response($v->serializeArray(), 200);
   }
-  notFound();
+  return notFound();
 });
 
 // Delete vault.
@@ -211,7 +209,6 @@ $app->delete('/-/vaults/:vaultName', function ($vaultName) {
   if ($v = Vault::get($vaultName)) {
     $v->delete();
   }
-  return200();
 });
 
 // Get list of vaults.
@@ -227,10 +224,11 @@ $app->get('/-/vaults', function () {
 // Create new vault.
 $app->put('/-/vaults/:vaultName', function ($vaultName) {
   if (!Vault::create($vaultName)) {
-    return500('could not create vault');
+    $GLOBALS['app']->response->setStatus(500);
+    return;
   }
 
-  return201();
+  $GLOBALS['app']->response->setStatus(201);
 });
 
 $app->run();
@@ -253,31 +251,11 @@ function response($arr, $status = 200) {
 
 function notFound() {
   $GLOBALS['app']->response->setStatus(404);
-  exit();
-}
-
-function return204() {
-  $GLOBALS['app']->response->setStatus(204);
-  exit();
-}
-
-function return201() {
-  $GLOBALS['app']->response->setStatus(201);
-  exit();
-}
-
-function return200() {
-  exit();
-}
-
-function return500() {
-  $GLOBALS['app']->response->setStatus(500);
-  exit();
 }
 
 function getVault($vaultName) {
   if (($vault = Vault::get($vaultName)) === false) {
-    notFound();
+    return notFound();
   }
 
   return $vault;
@@ -286,7 +264,7 @@ function getVault($vaultName) {
 function getMultipart($vaultName, $multipartID) {
   $vault = getVault($vaultName);
   if (($m = $vault->getMultipart($multipartID)) === false) {
-    notFound();
+    return notFound();
   }
   return $m;
 }
@@ -294,7 +272,7 @@ function getMultipart($vaultName, $multipartID) {
 function getJob($vaultName, $jobID) {
   $vault = getVault($vaultName);
   if (($job = $vault->getJob($jobID)) === false) {
-    notFound();
+    return notFound();
   }
   return $job;
 }
