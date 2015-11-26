@@ -2,6 +2,8 @@
 
 namespace Gsandbox;
 
+use Aws\Common\Hash\TreeHash;
+
 class InventoryJob extends Job {
 
   public function dumpOutput() {
@@ -10,6 +12,13 @@ class InventoryJob extends Job {
     if (!file_exists($file)) {
       $this->generateInventory();
     }
+
+    $contentLength = filesize($file);
+    $hash = TreeHash::fromContent(file_get_contents($file));
+    $treeHash = $hash->getHash();
+    header("Content-Type: application/json");
+    header("Content-Length: $contentLength");
+    header("x-amz-sha256-tree-hash: {$treeHash}");
 
     if (($f = fopen($file, 'r')) === false) {
       return false;
