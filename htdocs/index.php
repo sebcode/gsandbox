@@ -35,7 +35,6 @@ if ($request->accessKey === false) {
   });
 
   $app->run();
-  badRequest();
 }
 
 if (isset($GLOBALS['config']['responseDelay'])) {
@@ -232,7 +231,6 @@ $app->put('/-/vaults/:vaultName', function ($vaultName) {
 });
 
 $app->run();
-badRequest();
 
 function badRequest($msg = "") {
   $method = $GLOBALS['request']->method;
