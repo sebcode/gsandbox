@@ -37,7 +37,8 @@ abstract class VaultEntity {
   }
 
   public function setParams($params) {
-    file_put_contents($this->getParamsFile(), '<?php return ' . var_export($params, true) . ';');
+    file_put_contents($file = $this->getParamsFile(), '<?php return ' . var_export($params, true) . ';');
+    opcache_invalidate($file);
   }
 
   public function setParam($name, $value) {
