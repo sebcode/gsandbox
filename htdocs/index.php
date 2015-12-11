@@ -35,6 +35,7 @@ if ($request->accessKey === false) {
   });
 
   $app->run();
+  exit;
 }
 
 if (isset($GLOBALS['config']['responseDelay'])) {
@@ -45,7 +46,9 @@ $GLOBALS['config']['storePath'] .= $request->accessKey . '/';
 
 // Delete archive.
 $app->delete('/-/vaults/:vaultName/archives/:archiveID', function ($vaultName, $archiveID) {
-  $vault = getVault($vaultName);
+  if (!($vault = getVault($vaultName))) {
+    return;
+  }
 
   if ($archive = $vault->getArchive($archiveID)) {
     $archive->delete();
@@ -56,7 +59,9 @@ $app->delete('/-/vaults/:vaultName/archives/:archiveID', function ($vaultName, $
 
 // Initiate job.
 $app->post('/-/vaults/:vaultName/jobs', function ($vaultName) {
-  $vault = getVault($vaultName);
+  if (!($vault = getVault($vaultName))) {
+    return;
+  }
 
   $postData = file_get_contents('php://input');
   $params = json_decode($postData, true);
@@ -68,14 +73,19 @@ $app->post('/-/vaults/:vaultName/jobs', function ($vaultName) {
 
 // Get job output.
 $app->get('/-/vaults/:vaultName/jobs/:jobID/output', function ($vaultName, $jobID) {
-  $job = getJob($vaultName, $jobID);
+  if (!($job = getJob($vaultName, $jobID))) {
+    notFound();
+    return;
+  }
 
   if (!$job->hasOutput()) {
-    return notFound();
+    notFound();
+    return;
   }
 
   if (!$job->dumpOutput()) {
-    return notFound();
+    notFound();
+    return;
   }
 
   exit();
@@ -83,13 +93,20 @@ $app->get('/-/vaults/:vaultName/jobs/:jobID/output', function ($vaultName, $jobI
 
 // Describe job.
 $app->get('/-/vaults/:vaultName/jobs/:jobID', function ($vaultName, $jobID) {
-  $job = getJob($vaultName, $jobID);
+  if (!($job = getJob($vaultName, $jobID))) {
+    notFound();
+    return;
+  }
+
   response($job->serializeArray(true));
 });
 
 // Get list of jobs.
 $app->get('/-/vaults/:vaultName/jobs', function ($vaultName) {
-  $vault = getVault($vaultName);
+  if (!($vault = getVault($vaultName))) {
+    return;
+  }
+
   $jobs = [];
 
   foreach ($vault->getJobs() as $job) {
@@ -100,9 +117,23 @@ $app->get('/-/vaults/:vaultName/jobs', function ($vaultName) {
   response($res);
 });
 
+// Delete multipart upload.
+$app->delete('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaultName, $multipartID) {
+  if (!($m = getMultipart($vaultName, $multipartID))) {
+    $GLOBALS['app']->response->setStatus(204);
+    return;
+  }
+
+  $m->delete();
+  $GLOBALS['app']->response->setStatus(204);
+});
+
 // Finalize multipart upload.
 $app->post('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaultName, $multipartID) {
-  $m = getMultipart($vaultName, $multipartID);
+  if (!($m = getMultipart($vaultName, $multipartID))) {
+    notFound();
+    return;
+  }
 
   $treeHash = $_SERVER['HTTP_X_AMZ_SHA256_TREE_HASH'];
   $archiveSize = $_SERVER['HTTP_X_AMZ_ARCHIVE_SIZE'];
@@ -118,7 +149,10 @@ $app->post('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vau
 
 // Upload multipart part
 $app->put('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaultName, $multipartID) {
-  $m = getMultipart($vaultName, $multipartID);
+  if (!($m = getMultipart($vaultName, $multipartID))) {
+    notFound();
+    return;
+  }
 
   $contentHash = $_SERVER['HTTP_X_AMZ_CONTENT_SHA256'];
   $treeHash = $_SERVER['HTTP_X_AMZ_SHA256_TREE_HASH'];
@@ -162,7 +196,10 @@ $app->post('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
     badRequest("part size missing");
   }
 
-  $vault = getVault($vaultName);
+  if (!($vault = getVault($vaultName))) {
+    return;
+  }
+
   $partSize = $_SERVER['HTTP_X_AMZ_PART_SIZE'];
 
   $desc = '';
@@ -178,13 +215,20 @@ $app->post('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
 
 // Get list of multipart upload parts
 $app->get('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaultName, $multipartID) {
-  $m = getMultipart($vaultName, $multipartID);
+  if (!($m = getMultipart($vaultName, $multipartID))) {
+    notFound();
+    return;
+  }
+
   response($m->serializeArray(true));
 });
 
 // Get list of multipart uploads
 $app->get('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
-  $vault = getVault($vaultName);
+  if (!($vault = getVault($vaultName))) {
+    return;
+  }
+
   $mu = [];
 
   foreach ($vault->getMultiparts() as $m) {
@@ -200,7 +244,8 @@ $app->get('/-/vaults/:vaultName', function ($vaultName) {
   if ($v = Vault::get($vaultName)) {
     response($v->serializeArray(), 200);
   }
-  return notFound();
+  notFound();
+  return;
 });
 
 // Delete vault.
@@ -231,6 +276,7 @@ $app->put('/-/vaults/:vaultName', function ($vaultName) {
 });
 
 $app->run();
+exit;
 
 function badRequest($msg = "") {
   $method = $GLOBALS['request']->method;
@@ -252,26 +298,26 @@ function notFound() {
 }
 
 function getVault($vaultName) {
-  if (($vault = Vault::get($vaultName)) === false) {
-    return notFound();
-  }
-
-  return $vault;
+  return Vault::get($vaultName);
 }
 
 function getMultipart($vaultName, $multipartID) {
-  $vault = getVault($vaultName);
-  if (($m = $vault->getMultipart($multipartID)) === false) {
-    return notFound();
+  if (!($vault = getVault($vaultName))) {
+    return false;
   }
-  return $m;
+
+  return $vault->getMultipart($multipartID);
 }
 
 function getJob($vaultName, $jobID) {
-  $vault = getVault($vaultName);
-  if (($job = $vault->getJob($jobID)) === false) {
-    return notFound();
+  if (!($vault = getVault($vaultName))) {
+    return false;
   }
+
+  if (!($job = $vault->getJob($jobID))) {
+    return false;
+  }
+
   return $job;
 }
 
