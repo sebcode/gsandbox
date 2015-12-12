@@ -44,9 +44,71 @@ if (isset($GLOBALS['config']['responseDelay'])) {
 
 $GLOBALS['config']['storePath'] .= $request->accessKey . '/';
 
+// List tags.
+$app->get('/-/vaults/:vaultName/tags', function ($vaultName) {
+  if (!($vault = getVault($vaultName))) {
+    notFound();
+    return;
+  }
+
+  $ret = [
+    'Tags' => $vault->getTags(),
+  ];
+
+  header('Content-type: application/json');
+  echo json_encode($ret, JSON_PRETTY_PRINT);
+  exit();
+});
+
+// Add/remove tags.
+$app->post('/-/vaults/:vaultName/tags', function ($vaultName) use ($app) {
+  $request = $app->request();
+
+  if (!($vault = getVault($vaultName))) {
+    notFound();
+    return;
+  }
+
+  $operation = $request->get('operation');
+
+  $postData = file_get_contents('php://input');
+  $params = json_decode($postData, true);
+
+  try {
+    if ($operation === 'add') {
+      if (empty($params['Tags'])) {
+        $app->response->setStatus(500);
+        return;
+      }
+
+      $vault->addTags($params['Tags']);
+      noContent();
+      return;
+    } else if ($operation === 'remove') {
+      if (empty($params['TagKeys'])) {
+        $app->response->setStatus(500);
+        return;
+      }
+
+      $vault->removeTags($params['TagKeys']);
+      noContent();
+      return;
+    }
+
+    $app->response->setStatus(500);
+  } catch (Gsandbox\LimitExceededException $e) {
+    response([
+      "code" => "LimitExceededException",
+      "message" => "The quota for the number of tags that can be assigned to this resource has been reached.",
+      "type" => "Client",
+    ], 400);
+  }
+});
+
 // Delete archive.
 $app->delete('/-/vaults/:vaultName/archives/:archiveID', function ($vaultName, $archiveID) {
   if (!($vault = getVault($vaultName))) {
+    notFound();
     return;
   }
 
@@ -60,6 +122,7 @@ $app->delete('/-/vaults/:vaultName/archives/:archiveID', function ($vaultName, $
 // Initiate job.
 $app->post('/-/vaults/:vaultName/jobs', function ($vaultName) {
   if (!($vault = getVault($vaultName))) {
+    notFound();
     return;
   }
 
@@ -104,6 +167,7 @@ $app->get('/-/vaults/:vaultName/jobs/:jobID', function ($vaultName, $jobID) {
 // Get list of jobs.
 $app->get('/-/vaults/:vaultName/jobs', function ($vaultName) {
   if (!($vault = getVault($vaultName))) {
+    notFound();
     return;
   }
 
@@ -197,6 +261,7 @@ $app->post('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
   }
 
   if (!($vault = getVault($vaultName))) {
+    notFound();
     return;
   }
 
@@ -226,6 +291,7 @@ $app->get('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaul
 // Get list of multipart uploads
 $app->get('/-/vaults/:vaultName/multipart-uploads', function ($vaultName) {
   if (!($vault = getVault($vaultName))) {
+    notFound();
     return;
   }
 
@@ -281,16 +347,21 @@ exit;
 function badRequest($msg = "") {
   $method = $GLOBALS['request']->method;
   $uri = $GLOBALS['request']->uri;
-  $GLOBALS['app']->response->setStatus(400);
+  http_response_code(400);
   error_log("BAD REQUEST method:$method uri:$uri");
   error_log(var_export("MSG: $msg", true));
   exit();
 }
 
 function response($arr, $status = 200) {
+  http_response_code($status);
   header('Content-type: application/json');
   echo json_encode($arr, JSON_PRETTY_PRINT);
   exit();
+}
+
+function noContent() {
+  $GLOBALS['app']->response->setStatus(204);
 }
 
 function notFound() {

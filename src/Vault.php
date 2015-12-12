@@ -2,6 +2,8 @@
 
 namespace Gsandbox;
 
+class LimitExceededException extends \Exception { };
+
 class Vault {
 
   const DATEFORMAT = 'Y-m-d\TH:i:s\Z';
@@ -58,6 +60,7 @@ class Vault {
     @rmdir($this->getDir() . '/multiparts');
     @rmdir($this->getDir() . '/archives');
     @rmdir($this->getDir() . '/jobs');
+    @unlink($this->getDir() . '/tags');
     rmdir($this->getDir());
   }
 
@@ -182,6 +185,53 @@ class Vault {
       return false;
     }
     return $ret;
+  }
+
+  public function getTagsFile() {
+    return $this->getDir() . '/tags';
+  }
+
+  public function addTags($tags) {
+    $allTags = $this->getTags();
+
+    if (!is_array($allTags)) {
+      $allTags = [];
+    }
+
+    $allTags = array_merge($tags, $allTags);
+
+    $this->setTags($allTags);
+  }
+
+  public function setTags($tags) {
+    if (count($tags) > 10) {
+      throw new LimitExceededException;
+    }
+
+    file_put_contents($file = $this->getTagsFile(), '<?php return ' . var_export($tags, true) . ';');
+    opcache_invalidate($file);
+  }
+
+  public function removeTags($removeKeys) {
+    $allTags = $this->getTags();
+
+    if (!is_array($allTags)) {
+      $allTags = [];
+    }
+
+    $allTags = array_filter($allTags, function ($value, $key) use ($removeKeys) {
+      return in_array($key, $removeKeys) === false;
+    }, ARRAY_FILTER_USE_BOTH);
+
+    $this->setTags($allTags);
+  }
+
+  public function getTags() {
+    if (!file_exists($this->getTagsFile())) {
+      return [];
+    }
+
+    return include($this->getTagsFile());
   }
 
 }
