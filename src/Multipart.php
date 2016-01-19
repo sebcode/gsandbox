@@ -102,7 +102,9 @@ class Multipart extends VaultEntity {
     $parts = $this->getParts();
     $parts["{$rangeFrom}-{$rangeTo}"] = $treeHash;
     file_put_contents($metaPartsFile, "<?php return " . var_export($parts, true) . ';');
-    opcache_invalidate($metaPartsFile);
+    if (function_exists('opcache_invalidate')) {
+      opcache_invalidate($metaPartsFile);
+    }
 
     return true;
   }

@@ -198,7 +198,7 @@ class Vault {
       $allTags = [];
     }
 
-    $allTags = array_merge($tags, $allTags);
+    $allTags = array_merge($allTags, $tags);
 
     $this->setTags($allTags);
   }
@@ -209,7 +209,9 @@ class Vault {
     }
 
     file_put_contents($file = $this->getTagsFile(), '<?php return ' . var_export($tags, true) . ';');
-    opcache_invalidate($file);
+    if (function_exists('opcache_invalidate')) {
+      opcache_invalidate($file);
+    }
   }
 
   public function removeTags($removeKeys) {
