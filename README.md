@@ -2,8 +2,6 @@
 
 Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in unit tests.
 
-This is still work in progress.
-
 ## Coverage
 
 ### Vault operations
@@ -28,8 +26,10 @@ This is still work in progress.
 
 |  | Action | HTTP request |
 | --- | --- | --- |
-| - | Upload Archive | `POST /-/vaults/vault-name/archives` |
+| - [*] | Upload Archive | `POST /-/vaults/vault-name/archives` |
 | ✓ | Delete Archive | `DELETE /-/vaults/vault-name/archives/archive-id` |
+
+[*] I don't need that, multipart is the way to go
 
 ### Multipart upload operations
 
@@ -41,6 +41,13 @@ This is still work in progress.
 | ✓ | List multipart upload parts | `GET /-/vaults/vault-name/multipart-uploads/id` |
 | ✓ | Finalize multipart upload | `POST /-/vaults/vault-name/multipart-uploads/id` |
 | ✓ | Abort multipart upload | `DELETE /-/vaults/vault-name/multipart-uploads/id` |
+
+### Tag operations
+
+|  | Action | HTTP request |
+| --- | --- | --- |
+| ✓ | Add/remove tags | `POST /-/vaults/vault-name/tags` |
+| ✓ | List tags | `GET /-/vaults/vault-name/tags` |
 
 ### Limitations
 
