@@ -1,10 +1,10 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 class InventoryJob extends Job {
 
-  public function dumpOutput() {
+  public function dumpOutput($res, $range = false) {
     $file = $this->getFile('inventory');
 
     if (!file_exists($file)) {
@@ -12,16 +12,16 @@ class InventoryJob extends Job {
     }
 
     $contentLength = filesize($file);
-    header("Content-Type: application/json");
-    header("Content-Length: $contentLength");
+    $res = $res->withHeader("Content-Type", "application/json");
+    $res = $res->withHeader("Content-Length", $contentLength);
 
     if (($f = fopen($file, 'r')) === false) {
-      return false;
+      return $res->withStatus(404);
     }
     fpassthru($f);
     fclose($f);
 
-    return true;
+    return $res->withStatus(200);
   }
 
   public function generateInventory() {

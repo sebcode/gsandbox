@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\DataRetrievalPolicy;
+use Gsandbox\Model\DataRetrievalPolicy;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;

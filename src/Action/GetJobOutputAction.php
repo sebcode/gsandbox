@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\Vault;
+use Gsandbox\Model\Vault;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,12 +25,16 @@ class GetJobOutputAction {
       return $res->withStatus(404);
     }
 
-    if (!$job->dumpOutput()) {
-      return $res->withStatus(404);
+    $range = false;
+    if ($rangeHeader = $req->getHeaderLine('Range')) {
+      if (!preg_match('@([0-9]+)?-([0-9]+)@', $rangeHeader, $m)) {
+        return $res->withStatus(400);
+      }
+
+      $range = [ $m[1], $m[2] ];
     }
 
-    // XXX refactor
-    exit();
+    return $job->dumpOutput($res, $range);
   }
 
 }

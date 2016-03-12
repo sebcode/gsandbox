@@ -1,6 +1,6 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 class InvalidPolicyException extends \Exception { };
 
@@ -11,7 +11,7 @@ class DataRetrievalPolicy {
   protected $file = '';
 
   public function __construct() {
-    $this->file = $GLOBALS['config']['storePath'] . 'dataRetrievalPolicy.json';
+    $this->file = $GLOBALS['vaultStorePath'] . '/../dataRetrievalPolicy.json';
   }
 
   public function set($ruleset) {

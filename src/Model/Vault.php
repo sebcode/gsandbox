@@ -1,6 +1,6 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 class LimitExceededException extends \Exception { };
 
@@ -19,7 +19,7 @@ class Vault {
   }
 
   public static function all() {
-    $dir = $GLOBALS['config']['storePath'] . "/vaults";
+    $dir = $GLOBALS['vaultStorePath'];
 
     $ret = [];
 
@@ -33,7 +33,7 @@ class Vault {
   }
 
   public static function get($name) {
-    $dir = $GLOBALS['config']['storePath'] . "/vaults/$name";
+    $dir = $GLOBALS['vaultStorePath'] . $name;
     if (!is_dir($dir)) {
       return false;
     }
@@ -43,7 +43,7 @@ class Vault {
   }
 
   public static function create($name) {
-    $dir = $GLOBALS['config']['storePath'] . "/vaults/$name";
+    $dir = $GLOBALS['vaultStorePath'] . $name;
     if (is_dir($dir)) {
       return true;
     }
@@ -69,7 +69,7 @@ class Vault {
   }
 
   public function getDir() {
-    return $GLOBALS['config']['storePath'] . "/vaults/{$this->name}";
+    return $GLOBALS['vaultStorePath'] . $this->name;
   }
 
   public function getARN() {

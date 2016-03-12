@@ -1,6 +1,6 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 class Job extends VaultEntity {
 
@@ -28,9 +28,9 @@ class Job extends VaultEntity {
     return $this->getCompleted();
   }
 
-  public function dumpOutput() {
+  public function dumpOutput($res, $range = false) {
     error_log('Use subclasses\' ::dumpOutput.');
-    return false;
+    return $res->withStatus(500);
   }
 
   public function getStatus() {

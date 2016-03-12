@@ -4,7 +4,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 ## Coverage
 
-### [Vault operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/vault-operations.html)
+### [Vault Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/vault-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 | ✓ | Add/remove tags | `POST /-/vaults/vault-name/tags` |
 | ✓ | List tags | `GET /-/vaults/vault-name/tags` |
 
-### [Job operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/job-operations.html)
+### [Job Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/job-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 | ✓ | Describe job | `GET /-/vaults/vault-name/job/job-id` |
 | ✓ | Get job output | `GET /-/vaults/vault-name/jobs/job-id/output` |
 
-### [Archive operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/archive-operations.html)
+### [Archive Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/archive-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 [*] I don't need that, multipart is the way to go
 
-### [Multipart upload operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/multipart-archive-operations.html)
+### [Multipart Upload Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/multipart-archive-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |

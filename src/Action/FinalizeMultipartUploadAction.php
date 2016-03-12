@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\Vault;
+use Gsandbox\Model\Vault;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -29,7 +29,7 @@ class FinalizeMultipartUploadAction {
     }
 
     return $res->withStatus(201)
-      ->withHeader('x-amz-archive-id', $a->id);
+      ->withHeader('x-amz-archive-id', $a->getId());
   }
 
 }

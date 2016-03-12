@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\Vault;
+use Gsandbox\Model\Vault;
 
 use Aws\Glacier\TreeHash;
 

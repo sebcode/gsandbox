@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\Vault;
+use Gsandbox\Model\Vault;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,7 +21,7 @@ class InitiateJobAction {
     $job = $v->createJob($params);
 
     return $res->withStatus(202)
-      ->withHeader("x-amz-job-id", $job->id);
+      ->withHeader("x-amz-job-id", $job->getId());
   }
 
 }

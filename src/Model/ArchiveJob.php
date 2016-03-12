@@ -1,6 +1,6 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 use Aws\Glacier\TreeHash;
 
@@ -28,25 +28,24 @@ class ArchiveJob extends Job {
     return $ret;
   }
 
-  public function dumpOutput() {
-    $request = $GLOBALS['request'];
-
+  public function dumpOutput($res, $range = false) {
     if (($archive = $this->getArchive()) === false) {
-      return false;
+      return $res->withStatus(500);
     }
 
-    if (($range = $request->getRange()) === false) {
-      return false;
+    if (($f = fopen($file = $archive->getFile('data'), 'r')) === false) {
+      return $res->withStatus(500);
     }
 
-    list($from, $to) = $range;
-
-    if (($f = fopen($archive->getFile('data'), 'r')) === false) {
-      return false;
+    if ($range) {
+      list($from, $to) = $range;
+    } else {
+      $from = 0;
+      $to = filesize($file);
     }
 
     if (fseek($f, $from) === -1) {
-      return false;
+      return $res->withStatus(500);
     }
 
     $bufSize = 1024 * 1024 * 1;
@@ -59,7 +58,7 @@ class ArchiveJob extends Job {
     while ($readBytes > 0 && !feof($f)) {
       $buf = fread($f, max($bufSize, $readBytes));
       if ($buf === false) {
-        return false;
+        return $res->withStatus(500);
       }
       $readBytes -= strlen($buf);
       $data .= $buf;
@@ -67,14 +66,14 @@ class ArchiveJob extends Job {
 
     $hash->update($data);
     $treeHash = bin2hex($hash->complete());
-    header("Content-Type: application/octet-stream");
-    header("Content-Length: $contentLength");
+    $res = $res->withHeader("Content-Type", "application/octet-stream");
+    $res = $res->withHeader("Content-Length", $contentLength);
     if (static::validPartSize($contentLength)) {
-      header("x-amz-sha256-tree-hash: {$treeHash}");
+      $res = $res->withHeader("x-amz-sha256-tree-hash", $treeHash);
     }
 
     if (fseek($f, $from) === -1) {
-      return false;
+      return $res->withStatus(500);
     }
 
     $readBytes = $to - $from + 1;
@@ -84,14 +83,12 @@ class ArchiveJob extends Job {
     while ($readBytes > 0 && !feof($f)) {
       $buf = fread($f, max($bufSize, $readBytes));
       if ($buf === false) {
-        return false;
+        return $res->withStatus(500);
       }
       while (strlen($buf)) {
         $dump = substr($buf, 0, $dumpBufSize);
         $buf = substr($buf, strlen($dump));
-        echo $dump;
-        flush();
-        ob_flush();
+        $res->getBody()->write($dump);
         $dumped += strlen($dump);
         $readBytes -= strlen($dump);
       }
@@ -101,7 +98,7 @@ class ArchiveJob extends Job {
     }
 
     fclose($f);
-    return true;
+    return $res->withStatus(200);;
   }
 
   public static function validPartSize($size) {

@@ -2,7 +2,7 @@
 
 namespace Gsandbox\Action;
 
-use Gsandbox\Vault;
+use Gsandbox\Model\Vault;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -30,7 +30,7 @@ class InitiateMultipartUploadAction {
     $m = $vault->createMultipart($partSize, $desc);
 
     return $res->withStatus(201)
-      ->withHeader('x-amz-multipart-upload-id', $m->id);
+      ->withHeader('x-amz-multipart-upload-id', $m->getId());
   }
 
 }

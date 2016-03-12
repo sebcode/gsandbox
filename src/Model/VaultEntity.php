@@ -1,6 +1,6 @@
 <?php
 
-namespace Gsandbox;
+namespace Gsandbox\Model;
 
 abstract class VaultEntity {
 
