@@ -4,8 +4,16 @@ namespace Gsandbox;
 
 abstract class VaultEntity {
 
-  public $id;
-  public $vault;
+  protected $id;
+  protected $vault;
+
+  public function getId() {
+    return $this->id;
+  }
+
+  public function getVault() {
+    return $this->vault;
+  }
 
   abstract public function getSubdir();
 
