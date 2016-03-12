@@ -4,7 +4,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 ## Coverage
 
-### Vault operations
+### [Vault operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/vault-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -12,8 +12,10 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 | ✓ | List vaults | `GET /-/vaults` |
 | ✓ | Delete vault | `DELETE /-/vaults/vault-name` |
 | ✓ | Describe vault | `GET /-/vaults/vault-name` |
+| ✓ | Add/remove tags | `POST /-/vaults/vault-name/tags` |
+| ✓ | List tags | `GET /-/vaults/vault-name/tags` |
 
-### Job operations
+### [Job operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/job-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -22,7 +24,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 | ✓ | Describe job | `GET /-/vaults/vault-name/job/job-id` |
 | ✓ | Get job output | `GET /-/vaults/vault-name/jobs/job-id/output` |
 
-### Archive operations
+### [Archive operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/archive-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -31,7 +33,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 [*] I don't need that, multipart is the way to go
 
-### Multipart upload operations
+### [Multipart upload operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/multipart-archive-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
@@ -42,12 +44,12 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 | ✓ | Finalize multipart upload | `POST /-/vaults/vault-name/multipart-uploads/id` |
 | ✓ | Abort multipart upload | `DELETE /-/vaults/vault-name/multipart-uploads/id` |
 
-### Tag operations
+### [Data Retrieval Policy Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/data-retrieval-policy-operations.html)
 
 |  | Action | HTTP request |
 | --- | --- | --- |
-| ✓ | Add/remove tags | `POST /-/vaults/vault-name/tags` |
-| ✓ | List tags | `GET /-/vaults/vault-name/tags` |
+| ✓ | Get Data Retrieval Policy | `GET /-/policies/data-retrieval` |
+| ✓ | Set Data Retrieval Policy | `PUT /-/policies/data-retrieval` |
 
 ### Limitations
 
@@ -61,6 +63,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 ## Requirements
 
  * Web server with PHP 5.6+
+ * [PHP Composer](https://getcomposer.org/)
 
 ## Installation
 
