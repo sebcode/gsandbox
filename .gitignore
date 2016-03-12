@@ -1,3 +1,5 @@
 vendor
 *.swp
 config.php
+
+tests/_output/*

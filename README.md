@@ -62,8 +62,9 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 ## Requirements
 
- * Web server with PHP 5.6+
+ * Web server with PHP 7
  * [PHP Composer](https://getcomposer.org/)
+ * [PHP Codeception](http://codeception.com/) for Tests
 
 ## Installation
 
@@ -73,6 +74,7 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
  * Edit `config.php` and change `storePath` to the path where data should be stored (e.g. `/var/gsandboxstore/`).
  * Make `storePath` readable and writeable for web server.
  * Each directory in `storePath` represents a fake Amazon AWS Access Key you will be using to connect to the test server. Create that directory and make it readable and writeable for the web server.
+ * Add `127.0.0.1 gsandbox.localhost` to `/etc/hosts`
  * Configure virtual host for web server. Example for apache:
 
         <VirtualHost *:80>
@@ -93,6 +95,10 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
             Allow from all
           </Directory>
         </VirtualHost>
+
+## Tests
+
+`vendor/codeception/codeception/codecept run`
 
 ## Credits
 
