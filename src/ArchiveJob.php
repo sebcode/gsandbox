@@ -2,7 +2,7 @@
 
 namespace Gsandbox;
 
-use Aws\Common\Hash\TreeHash;
+use Aws\Glacier\TreeHash;
 
 class ArchiveJob extends Job {
 
@@ -65,8 +65,8 @@ class ArchiveJob extends Job {
       $data .= $buf;
     }
 
-    $hash = TreeHash::fromContent($data);
-    $treeHash = $hash->getHash();
+    $hash->update($data);
+    $treeHash = bin2hex($hash->complete());
     header("Content-Type: application/octet-stream");
     header("Content-Length: $contentLength");
     if (static::validPartSize($contentLength)) {

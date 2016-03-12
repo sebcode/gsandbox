@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
-use Aws\Common\Hash\TreeHash;
+use Aws\Glacier\TreeHash;
 use Gsandbox\Request;
 use Gsandbox\Vault;
 use Gsandbox\Multipart;
@@ -269,11 +269,12 @@ $app->put('/-/vaults/:vaultName/multipart-uploads/:multipartID', function ($vaul
     badRequest("invalid content length (expected: $contentLength actual: $actualContentLength)");
   }
 
-  $hash = TreeHash::fromContent($putData);
-  $actualTreeHash = $hash->getHash();
+  $hash = new TreeHash;
+  $hash->update($putData);
+  $actualTreeHash = bin2hex($hash->complete());
 
   if ($treeHash !== $actualTreeHash) {
-    badRequest('tree hash mismatch');
+    badRequest("tree hash mismatch actual:$actualTreeHash exp:$treeHash");
   }
 
   if (isset($GLOBALS['config']['uploadThrottle'])) {

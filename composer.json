@@ -3,7 +3,7 @@
   "type": "project",
   "description": "Amazon Glacier Sandbox",
   "require": {
-    "aws/aws-sdk-php": "2.8.18",
+    "aws/aws-sdk-php": "3.15.9",
     "slim/slim": "2.6.2"
   },
   "autoload": {
