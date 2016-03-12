@@ -24,7 +24,7 @@ class SetTagsAction {
     try {
       if ($operation === 'add') {
         if (empty($params['Tags'])) {
-          return $res->withStatus(500);
+          return $res->withStatus(400);
         }
 
         $vault->addTags($params['Tags']);
@@ -38,8 +38,8 @@ class SetTagsAction {
         return $res->withStatus(204);
       }
 
-      return $res->withStatus(500);
-    } catch (Gsandbox\LimitExceededException $e) {
+      return $res->withStatus(400);
+    } catch (\Gsandbox\Model\LimitExceededException $e) {
       return $res->withJson([
         "code" => "LimitExceededException",
         "message" => "The quota for the number of tags that can be assigned to this resource has been reached.",
