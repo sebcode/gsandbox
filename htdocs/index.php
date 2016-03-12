@@ -7,6 +7,7 @@ use Gsandbox\Request;
 use Gsandbox\Vault;
 use Gsandbox\Multipart;
 use Gsandbox\Job;
+use Gsandbox\DataRetrievalPolicy;
 
 $config = include(__DIR__ . '/../config.php');
 
@@ -43,6 +44,38 @@ if (isset($GLOBALS['config']['responseDelay'])) {
 }
 
 $GLOBALS['config']['storePath'] .= $request->accessKey . '/';
+
+// Get Data Retrieval Policy.
+$app->get('/-/policies/data-retrieval', function () {
+  $policy = new DataRetrievalPolicy;
+  $ruleset = $policy->get();
+
+  header('Content-type: application/json');
+  echo json_encode($ruleset, JSON_PRETTY_PRINT);
+  exit();
+});
+
+// Set Data Retrieval Policy.
+$app->put('/-/policies/data-retrieval', function () {
+  $putData = file_get_contents('php://input');
+  $actualContentLength = strlen($putData);
+  if ($actualContentLength != $contentLength) {
+    badRequest("invalid content length (expected: $contentLength actual: $actualContentLength)");
+  }
+
+  if (!($ruleset = json_decode($putData, true))) {
+    badRequest("Cannot decode JSON data.");
+  }
+
+  try {
+    $policy = new DataRetrievalPolicy;
+    $ruleset = $policy->set($ruleset);
+  } catch (Gsandbox\InvalidPolicyException $e) {
+    badRequest();
+  }
+
+  $GLOBALS['app']->response->setStatus(204);
+});
 
 // List tags.
 $app->get('/-/vaults/:vaultName/tags', function ($vaultName) {
