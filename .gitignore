@@ -1,5 +1,5 @@
 vendor
 *.swp
 config.php
-
 tests/_output/*
+c3.php

@@ -10,9 +10,6 @@ $I->sendPUT('/-/vaults/testvault2');
 $I->seeResponseCodeIs(201);
 $I->sendPUT('/-/vaults/testvault3');
 $I->seeResponseCodeIs(201);
-$this->assertTrue(is_dir($GLOBALS['storePath'] . '/vaults/testvault1'));
-$this->assertTrue(is_dir($GLOBALS['storePath'] . '/vaults/testvault2'));
-$this->assertTrue(is_dir($GLOBALS['storePath'] . '/vaults/testvault3'));
 
 $I->sendGET('/-/vaults');
 $I->seeResponseCodeIs(200);
@@ -31,7 +28,4 @@ $I->sendDELETE('/-/vaults/testvault2');
 $I->seeResponseCodeIs(204);
 $I->sendDELETE('/-/vaults/testvault3');
 $I->seeResponseCodeIs(204);
-$this->assertFalse(is_dir($GLOBALS['storePath'] . '/vaults/testvault1'));
-$this->assertFalse(is_dir($GLOBALS['storePath'] . '/vaults/testvault2'));
-$this->assertFalse(is_dir($GLOBALS['storePath'] . '/vaults/testvault3'));
 
