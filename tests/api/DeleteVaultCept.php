@@ -1,6 +1,6 @@
 <?php
 
-$I = new MyApiTester($scenario);
+$I = new ApiTester($scenario);
 $I->wantTo('Delete a vault.');
 
 $I->haveAuth();

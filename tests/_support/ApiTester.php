@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -20,7 +19,7 @@ class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+    public function haveAuth() {
+      $this->haveHttpHeader('Authorization', "AWS4-HMAC-SHA256 Credential=UNITTEST/20160312/localhost/glacier/aws4_request, SignedHeaders=host;x-amz-glacier-version, Signature=0000000000000000000000000000000000000000000000000000000000000000");
+    }
 }

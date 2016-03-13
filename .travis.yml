@@ -1,0 +1,26 @@
+language: php
+
+php:
+  - 7.0
+
+addons:
+  hosts:
+    - gsandbox.localhost
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+sudo: false
+
+before_script:
+  - echo "<?php return ['storePath' => '$TRAVIS_BUILD_DIR/data']; " > config.php
+  - mkdir -p "$TRAVIS_BUILD_DIR/data/UNITTEST/vaults"
+  - composer install -n
+  - php -S 127.0.0.1:8080 htdocs/index.php &
+  - sleep 1
+
+script:
+  - ./vendor/codeception/codeception/codecept run
+

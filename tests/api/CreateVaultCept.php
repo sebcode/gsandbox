@@ -1,6 +1,6 @@
 <?php
 
-$I = new MyApiTester($scenario);
+$I = new ApiTester($scenario);
 $I->wantTo('Create a new vault.');
 
 $I->sendPUT('/-/vaults/testvault');

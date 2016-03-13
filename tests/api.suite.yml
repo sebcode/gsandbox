@@ -2,7 +2,6 @@ class_name: ApiTester
 modules:
     enabled:
         - REST:
-            url: http://gsandbox.localhost/
+            url: http://gsandbox.localhost:8080/
             depends: PhpBrowser
             part: Json
-

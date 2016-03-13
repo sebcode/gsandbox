@@ -1,5 +1,7 @@
 # gsandbox
 
+[![Build Status](https://travis-ci.org/sebcode/gsandbox.svg?branch=master)](https://travis-ci.org/sebcode/gsandbox)
+
 Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in unit tests.
 
 ## Coverage

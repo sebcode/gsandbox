@@ -8,5 +8,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://gsandbox.localhost/
         - \Helper\Acceptance
+    config:
+        PhpBrowser:
+            url: http://gsandbox.localhost:8080/
