@@ -23,5 +23,8 @@ before_script:
   - sleep 1
 
 script:
-  - ./vendor/bin/codecept run --coverage-xml
+  - php vendor/bin/codecept run --coverage-xml
+
+after_script:
+  - php vendor/bin/coveralls -v
 
