@@ -12,9 +12,8 @@ settings:
 coverage:
     enabled: true
     remote: true
-    whitelist:
-        include:
-            - src/*
+    include:
+        - src/*
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
