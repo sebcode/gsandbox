@@ -22,10 +22,10 @@ class UploadMultipartUploadPartAction
             return $res->withStatus(404);
         }
 
-        $contentHash = $_SERVER['HTTP_X_AMZ_CONTENT_SHA256'];
-        $treeHash = $_SERVER['HTTP_X_AMZ_SHA256_TREE_HASH'];
-        $contentRange = $_SERVER['HTTP_CONTENT_RANGE'];
-        $contentLength = $_SERVER['CONTENT_LENGTH'];
+        $contentHash = $req->getHeaderLine('x-amz-content-sha256');
+        $treeHash = $req->getHeaderLine('x-amz-sha256-tree-hash');
+        $contentRange = $req->getHeaderLine('Content-Range');
+        $contentLength = $req->getHeaderLine('Content-Length');
 
         // 'bytes 0-1048575/*'
         if (!preg_match('@(\d+)-(\d+)@', $contentRange, $match)) {

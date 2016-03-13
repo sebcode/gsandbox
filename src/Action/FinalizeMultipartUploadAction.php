@@ -21,8 +21,8 @@ class FinalizeMultipartUploadAction
             return $res->withStatus(404);
         }
 
-        $treeHash = $_SERVER['HTTP_X_AMZ_SHA256_TREE_HASH'];
-        $archiveSize = $_SERVER['HTTP_X_AMZ_ARCHIVE_SIZE'];
+        $treeHash = $req->getHeaderLine('x-amz-sha256-tree-hash');
+        $archiveSize = $req->getHeaderLine('x-amz-archive-size');
 
         if (($a = $m->finalize($archiveSize, $treeHash)) === false) {
             return $res->withStatus(400)->write('Finalize failed');

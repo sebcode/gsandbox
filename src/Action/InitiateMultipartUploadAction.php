@@ -16,15 +16,12 @@ class InitiateMultipartUploadAction
             return $res->withStatus(404);
         }
 
-        if (empty($_SERVER['HTTP_X_AMZ_PART_SIZE'])) {
+        if (!($partSize = $req->getHeaderLine('x-amz-part-size'))) {
             return $res->withStatus(400)->write('Part size missing.');
         }
 
-        $partSize = $_SERVER['HTTP_X_AMZ_PART_SIZE'];
-
-        $desc = '';
-        if (!empty($_SERVER['HTTP_X_AMZ_ARCHIVE_DESCRIPTION'])) {
-            $desc = $_SERVER['HTTP_X_AMZ_ARCHIVE_DESCRIPTION'];
+        if (!($desc = $req->getHeaderLine('x-amz-archive-description'))) {
+            $desc = '';
         }
 
         $m = $vault->createMultipart($partSize, $desc);
