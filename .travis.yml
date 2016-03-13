@@ -22,5 +22,5 @@ before_script:
   - sleep 1
 
 script:
-  - ./vendor/codeception/codeception/codecept run
+  - ./vendor/bin/codecept run --coverage-xml
 
