@@ -73,13 +73,23 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
  * Checkout repository to `/var/www/gsandbox` for example.
  * Call `composer install` to install dependencies.
  * `cp config.sample.php config.php`.
- * Edit `config.php` and change `storePath` to the path where data should be stored (e.g. `/var/gsandboxstore/`).
+ * Edit `config.php` and change `storePath` to the path where data should be
+   stored (e.g. `/var/gsandboxstore/`).
  * Make `storePath` readable and writeable for web server.
- * Each directory in `storePath` represents a fake Amazon AWS Access Key you will be using to connect to the test server. Create that directory and make it readable and writeable for the web server.
+ * Each directory in `storePath` represents a fake Amazon AWS Access Key you
+   will be using to connect to the test server. Create that directory and make
+   it readable and writeable for the web server.
  * Add `127.0.0.1 gsandbox.localhost` to `/etc/hosts`
- * Configure virtual host for web server. Example for apache:
 
-        <VirtualHost *:80>
+### Using PHP's Builtin Webserver
+
+ * Run `php -S 127.0.0.1:8080 htdocs/index.php`
+
+### Using Apache
+
+ * Example apache virtual host:
+
+        <VirtualHost *:8080>
           ServerName gsandbox.localhost
           DocumentRoot /var/www/gsandbox/htdocs
 
@@ -98,9 +108,11 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
           </Directory>
         </VirtualHost>
 
-## Tests
+## Run Tests
 
-`vendor/codeception/codeception/codecept run`
+ * Make sure that `$storePath/UNITTEST/vaults` exists.
+ * Make sure that gsandbox is accessible via `http://gsandbox.localhost:8080/`.
+ * Run `vendor/bin/codecept run`.
 
 ## Credits
 
