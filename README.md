@@ -30,10 +30,8 @@ Sandbox for Amazon Glacier written in PHP. Useful to mock Amazon Glacier API in 
 
 |  | Action | HTTP request |
 | --- | --- | --- |
-| - [*] | Upload Archive | `POST /-/vaults/vault-name/archives` |
+| ✓ | Upload Archive | `POST /-/vaults/vault-name/archives` |
 | ✓ | Delete Archive | `DELETE /-/vaults/vault-name/archives/archive-id` |
-
-[*] I don't need that, multipart is the way to go
 
 ### [Multipart Upload Operations](http://docs.aws.amazon.com/amazonglacier/latest/dev/multipart-archive-operations.html)
 

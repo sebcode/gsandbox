@@ -49,6 +49,9 @@ $app->group('/-', function () use ($app) {
     /* Archive Operations */
     /**********************/
 
+    // Upload archive.
+    $app->post('/vaults/{vaultName}/archives', \Gsandbox\Action\UploadArchiveAction::class);
+
     // Delete archive.
     $app->delete('/vaults/{vaultName}/archives/{archiveID}', \Gsandbox\Action\DeleteArchiveAction::class);
 
