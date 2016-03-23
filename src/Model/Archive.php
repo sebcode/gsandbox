@@ -13,7 +13,7 @@ class Archive extends VaultEntity
     {
         $ret = [
             'ArchiveId' => $this->id,
-            'ArchiveDescription' => $this->getParam('Description'),
+            'ArchiveDescription' => (string) $this->getParam('Description'),
             'CreationDate' => $this->getCreationDate()->format(Vault::DATEFORMAT),
             'Size' => (int) $this->getParam('Size'),
             'SHA256TreeHash' => $this->getParam('SHA256TreeHash'),
