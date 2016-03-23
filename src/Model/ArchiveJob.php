@@ -23,7 +23,7 @@ class ArchiveJob extends Job
 
         if ($this->getCompleted()) {
             $ret['ArchiveId'] = $archive->id;
-            $ret['ArchiveSizeInBytes'] = (int) $archive->getParam('Size');
+            $ret['ArchiveSizeInBytes'] = (int) filesize($archive->getFile('data'));
             $ret['ArchiveSHA256TreeHash'] = $archive->getParam('SHA256TreeHash');
             $ret['SHA256TreeHash'] = $archive->getParam('SHA256TreeHash');
         }
