@@ -66,6 +66,7 @@ class UploadArchiveAction
         }
 
         return $res->withStatus(201)
-            ->withHeader('x-amz-multipart-upload-id', $a->getId());
+            ->withHeader('x-amz-archive-id', $a->getId())
+            ->withHeader('x-amz-sha256-tree-hash', $treeHash);
     }
 }
