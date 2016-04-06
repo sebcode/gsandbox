@@ -21,6 +21,8 @@ class DeleteArchiveAction
             $archive->delete();
         }
 
+        $v->invalidateInventory();
+
         return $res->withStatus(204);
     }
 }

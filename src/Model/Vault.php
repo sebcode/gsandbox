@@ -276,4 +276,52 @@ class Vault
 
         return include $this->getTagsFile();
     }
+
+    public function getInventoryCacheFile()
+    {
+        return $this->getDir().'/cached-inventory.json';
+    }
+
+    public function hasCachedInventory() {
+        return file_exists($this->getInventoryCacheFile());
+    }
+
+    public function invalidateInventory()
+    {
+        if ($this->hasCachedInventory()) {
+            unlink($this->getInventoryCacheFile());
+        }
+    }
+
+    public function generateInventory()
+    {
+        $file = $this->getInventoryCacheFile();
+        $tmpFile = "{$file}.".md5(rand()).".tmp";
+
+        $archiveList = [];
+
+        foreach ($this->getArchives() as $archive) {
+            $archiveList[] = $archive->serializeArray();
+        }
+
+        $date = new \DateTime();
+
+        $ret = [
+            'VaultARN' => $this->getARN(),
+            'InventoryDate' => $date->format(Vault::DATEFORMAT),
+            'ArchiveList' => $archiveList,
+        ];
+
+        if (($json = json_encode($ret, JSON_PRETTY_PRINT)) === false) {
+            throw new \Exception("Could not encode JSON: " . json_last_error_msg());
+        }
+
+        if (file_put_contents($tmpFile, $json) === false) {
+            throw new \Exception("Could not write $tmpFile");
+        }
+
+        if (!rename($tmpFile, $file)) {
+            throw new \Exception("Could not rename $tmpFile to $file");
+        }
+    }
 }

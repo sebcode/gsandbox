@@ -65,6 +65,8 @@ class UploadArchiveAction
                 ->write("Could not write archive data: ". $a->getFile('data'));
         }
 
+        $vault->invalidateInventory();
+
         return $res->withStatus(201)
             ->withHeader('x-amz-archive-id', $a->getId())
             ->withHeader('x-amz-sha256-tree-hash', $treeHash);

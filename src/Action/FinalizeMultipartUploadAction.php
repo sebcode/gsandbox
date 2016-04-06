@@ -28,6 +28,8 @@ class FinalizeMultipartUploadAction
             return $res->withStatus(400)->write('Finalize failed');
         }
 
+        $vault->invalidateInventory();
+
         return $res->withStatus(201)
             ->withHeader('x-amz-archive-id', $a->getId());
     }
