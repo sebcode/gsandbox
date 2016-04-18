@@ -16,7 +16,10 @@ class ListJobsAction
             return $res->withStatus(404);
         }
 
-        $jsonResponse = ['JobList' => []];
+        $jsonResponse = [
+            'Marker' => null,
+            'JobList' => [],
+        ];
 
         foreach ($vault->getJobs() as $job) {
             $jsonResponse['JobList'][] = $job->serializeArray();

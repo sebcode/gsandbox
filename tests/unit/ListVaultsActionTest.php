@@ -10,7 +10,7 @@ class ListVaultsActionTest extends ActionTestBase
     {
         $action = new ListVaultsAction;
 
-        $exp = ['VaultList' => []];
+        $exp = ['Marker' => null, 'VaultList' => []];
 
         $res = $action->__invoke($this->getRequest('GET'), new Response(), []);
 
@@ -23,7 +23,7 @@ class ListVaultsActionTest extends ActionTestBase
 
         $action = new ListVaultsAction;
 
-        $exp = ['VaultList' => [[
+        $exp = ['Marker' => null, 'VaultList' => [[
             "VaultName" => "testvault",
             "CreationDate" => "XXX",
             "LastInventoryDate" => null,

@@ -16,7 +16,10 @@ class ListVaultsAction
             $ret[] = $vault->serializeArray();
         }
 
-        $jsonResponse = ['VaultList' => $ret];
+        $jsonResponse = [
+            'Marker' => null,
+            'VaultList' => $ret,
+        ];
 
         return $res->withJson($jsonResponse, 200, JSON_PRETTY_PRINT);
     }
