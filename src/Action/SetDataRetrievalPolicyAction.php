@@ -10,6 +10,7 @@ class SetDataRetrievalPolicyAction
 {
     public function __invoke(Request $req, Response $res, $args = [])
     {
+        $contentLength = $req->getHeaderLine('Content-Length');
         $putData = file_get_contents('php://input');
         $actualContentLength = strlen($putData);
         if ($actualContentLength != $contentLength) {
