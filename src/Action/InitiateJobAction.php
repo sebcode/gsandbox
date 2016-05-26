@@ -20,6 +20,16 @@ class InitiateJobAction
         $params = json_decode($postData, true);
         $job = $v->createJob($params);
 
+        if (!empty($GLOBALS['config']['throwPolicyEnforcedException'])
+            && $job->getAction() == 'ArchiveRetrieval') {
+
+            return $res->withJson([
+                'code' => 'PolicyEnforcedException',
+                'message' => 'InitiateJob request denied by current data retrieval policy.',
+                'type' => 'Client',
+            ], 400, JSON_PRETTY_PRINT);
+        }
+
         return $res->withStatus(202)
             ->withHeader('x-amz-job-id', $job->getId());
     }

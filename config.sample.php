@@ -17,4 +17,6 @@ return [
   },
 
   //'inventoryComplete' => '+10 second',
+
+  //'throwPolicyEnforcedException' => true,
 ];
