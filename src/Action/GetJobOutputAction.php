@@ -13,6 +13,14 @@ class GetJobOutputAction
         $vaultName = $args['vaultName'];
         $jobID = $args['jobID'];
 
+        if (!empty($GLOBALS['config']['throwResourceNotFoundExceptionForGetJobOutput'])) {
+            return $res->withJson([
+                'code' => 'ResourceNotFoundException',
+                'message' => 'ResourceNotFoundException.',
+                'type' => 'Client',
+            ], 404, JSON_PRETTY_PRINT);
+        }
+
         if (!($vault = Vault::get($vaultName))) {
             return $res->withStatus(404);
         }
