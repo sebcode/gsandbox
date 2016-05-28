@@ -31,7 +31,7 @@ class ArchiveJob extends Job
         return $ret;
     }
 
-    public function dumpOutput($res, $range = false)
+    public function dumpOutput($res, $range = false, $httpRange = false)
     {
         if (($archive = $this->getArchive()) === false) {
             return $res->withStatus(500);
@@ -45,7 +45,7 @@ class ArchiveJob extends Job
             list($from, $to) = $range;
         } else {
             $from = 0;
-            $to = filesize($file);
+            $to = filesize($file) - 1;
         }
 
         if (fseek($f, $from) === -1) {
@@ -72,6 +72,9 @@ class ArchiveJob extends Job
         $treeHash = bin2hex($hash->complete());
         $res = $res->withHeader('Content-Type', 'application/octet-stream');
         $res = $res->withHeader('Content-Length', $contentLength);
+        if ($httpRange) {
+            $res = $res->withHeader('Content-Range', "{$httpRange[0]}-{$httpRange[1]}/$contentLength");
+        }
         if (static::validPartSize($contentLength)) {
             $res = $res->withHeader('x-amz-sha256-tree-hash', $treeHash);
         }
@@ -85,7 +88,11 @@ class ArchiveJob extends Job
         $dumped = 0;
         $dumpBufSize = (1024 * 1024) / 2;
         while ($readBytes > 0 && !feof($f)) {
-            $buf = fread($f, max($bufSize, $readBytes));
+            $len = max($bufSize, $readBytes);
+            if ($len > $readBytes) {
+                $len = $readBytes;
+            }
+            $buf = fread($f, $len);
             if ($buf === false) {
                 return $res->withStatus(500);
             }
@@ -103,7 +110,7 @@ class ArchiveJob extends Job
 
         fclose($f);
 
-        return $res->withStatus(200);
+        return $res->withStatus($httpRange ? 206 : 200);
     }
 
     public static function validPartSize($size)

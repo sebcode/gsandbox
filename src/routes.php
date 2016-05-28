@@ -45,6 +45,9 @@ $app->group('/-', function () use ($app) {
     // Get job output.
     $app->get('/vaults/{vaultName}/jobs/{jobID}/output', \Gsandbox\Action\GetJobOutputAction::class);
 
+    // For tests: Force completion.
+    $app->post('/vaults/{vaultName}/jobs/{jobID}/force-complete', \Gsandbox\Action\ForceJobCompletionAction::class);
+
     /**********************/
     /* Archive Operations */
     /**********************/

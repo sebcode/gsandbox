@@ -73,6 +73,10 @@ class Job extends VaultEntity
 
     public function getCompletionDate()
     {
+        if ($this->getParam('forceComplete')) {
+            return $this->getCreationDate();
+        }
+
         $completeDate = $this->getCreationDate();
 
         if (!empty($GLOBALS['config']['inventoryComplete'])) {
@@ -91,6 +95,10 @@ class Job extends VaultEntity
 
     public function getCompleted()
     {
+        if ($this->getParam('forceComplete')) {
+            return true;
+        }
+
         return $this->getCompletionDate() != null;
     }
 
@@ -134,4 +142,10 @@ class Job extends VaultEntity
 
         return $ret;
     }
+
+    public function forceCompletion()
+    {
+        $this->setParam('forceComplete', true);
+    }
+
 }
