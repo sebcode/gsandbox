@@ -14,23 +14,19 @@ class GetJobOutputAction
         $jobID = $args['jobID'];
 
         if (!empty($GLOBALS['config']['throwResourceNotFoundExceptionForGetJobOutput'])) {
-            return $res->withJson([
-                'code' => 'ResourceNotFoundException',
-                'message' => 'ResourceNotFoundException.',
-                'type' => 'Client',
-            ], 404, JSON_PRETTY_PRINT);
+            return $res->resourceNotFoundException();
         }
 
         if (!($vault = Vault::get($vaultName))) {
-            return $res->withStatus(404);
+            return $res->resourceNotFoundException();
         }
 
         if (!($job = $vault->getJob($jobID))) {
-            return $res->withStatus(404);
+            return $res->resourceNotFoundException();
         }
 
         if (!$job->hasOutput()) {
-            return $res->withStatus(404);
+            return $res->resourceNotFoundException();
         }
 
         $range = false;

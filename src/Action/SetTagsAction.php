@@ -42,11 +42,7 @@ class SetTagsAction
 
             return $res->withStatus(400);
         } catch (\Gsandbox\Model\LimitExceededException $e) {
-            return $res->withJson([
-                'code' => 'LimitExceededException',
-                'message' => 'The quota for the number of tags that can be assigned to this resource has been reached.',
-                'type' => 'Client',
-            ], 400, JSON_PRETTY_PRINT);
+            return $res->limitExceededException();
         }
     }
 }

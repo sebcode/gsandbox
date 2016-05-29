@@ -14,11 +14,11 @@ class DescribeJobAction
         $jobID = $args['jobID'];
 
         if (!($vault = Vault::get($vaultName))) {
-            return $res->withStatus(404);
+            return $res->resourceNotFoundException();
         }
 
         if (!($job = $vault->getJob($jobID))) {
-            return $res->withStatus(404);
+            return $res->resourceNotFoundException();
         }
 
         return $res->withJson($job->serializeArray(true), 200, JSON_PRETTY_PRINT);

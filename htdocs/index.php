@@ -9,6 +9,11 @@ $config = require __DIR__ . '/../config.php';
 $settings = require __DIR__ . '/../src/settings.php';
 $app = new \Slim\App($settings);
 
+/* Inject our own Response object. */
+$app->getContainer()['response'] = function ($container) {
+    return new \Gsandbox\Response(200);
+};
+
 require __DIR__ . '/../src/routes.php';
 
 $app->run();

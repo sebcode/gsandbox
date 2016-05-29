@@ -23,11 +23,7 @@ class InitiateJobAction
         if (!empty($GLOBALS['config']['throwPolicyEnforcedException'])
             && $job->getAction() == 'ArchiveRetrieval') {
 
-            return $res->withJson([
-                'code' => 'PolicyEnforcedException',
-                'message' => 'InitiateJob request denied by current data retrieval policy.',
-                'type' => 'Client',
-            ], 400, JSON_PRETTY_PRINT);
+            return $res->policyEnforcedException();
         }
 
         return $res->withStatus(202)
