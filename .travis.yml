@@ -1,8 +1,7 @@
 language: php
 
 php:
-  - 5.6
-  #- 7.0 XXX https://github.com/Codeception/Codeception/issues/2730
+  - 7.0
 
 addons:
   hosts:
@@ -23,8 +22,10 @@ before_script:
   - sleep 1
 
 script:
-  - php vendor/bin/codecept run --coverage-xml
+  - php vendor/bin/codecept run
+  #- php vendor/bin/codecept run --coverage-xml
 
-after_script:
-  - php vendor/bin/coveralls -v
+# XXX https://github.com/Codeception/Codeception/issues/2730
+#after_script:
+#  - php vendor/bin/coveralls -v
 
