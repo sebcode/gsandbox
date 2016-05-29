@@ -3,9 +3,9 @@
   "type": "project",
   "description": "Amazon Glacier Sandbox",
   "require": {
-    "aws/aws-sdk-php": "3.15.9",
-    "slim/slim": "3.3.0",
-    "codeception/codeception": "2.1.7",
+    "aws/aws-sdk-php": "3.18.14",
+    "slim/slim": "3.4.2",
+    "codeception/codeception": "2.1.8",
     "codeception/c3": "2.*",
     "flow/jsonpath": "0.3.1",
     "satooshi/php-coveralls": "dev-master"
