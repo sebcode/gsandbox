@@ -15,7 +15,7 @@ cache:
 sudo: false
 
 before_script:
-  - echo "<?php return ['storePath' => '$TRAVIS_BUILD_DIR/data']; " > config.php
+  - echo "<?php return ['storePath' => '$TRAVIS_BUILD_DIR/data', 'inventoryComplete' => '+10 minute']; " > config.php
   - mkdir -p "$TRAVIS_BUILD_DIR/data/UNITTEST/vaults"
   - composer install -n
   - php -S 127.0.0.1:8080 htdocs/index.php &
