@@ -50,7 +50,7 @@ class GetJobOutputAction
                     return $res->withStatus(400);
                 }
 
-                $httpRange = [$m[2], $m[1]];
+                $httpRange = [$m[1], $m[2]];
 
                 $oRangeFrom = $rangeFrom;
                 $oRangeTo = $rangeTo;
