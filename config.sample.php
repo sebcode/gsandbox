@@ -21,4 +21,6 @@ return [
   //'throwPolicyEnforcedException' => true,
 
   //'throwResourceNotFoundExceptionForGetJobOutput' => true,
+
+  //'throwThrottlingExceptionForUpload' => true,
 ];

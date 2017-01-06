@@ -22,6 +22,15 @@ class Response extends \Slim\Http\Response
         ], 400, JSON_PRETTY_PRINT);
     }
 
+    public function throttlingException()
+    {
+        return $this->withJson([
+            'code' => 'ThrottlingException',
+            'message' => '...',
+            'type' => 'Client',
+        ], 400, JSON_PRETTY_PRINT);
+    }
+
     public function limitExceededException()
     {
         return $this->withJson([

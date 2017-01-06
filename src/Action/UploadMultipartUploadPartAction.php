@@ -11,6 +11,10 @@ class UploadMultipartUploadPartAction
 {
     public function __invoke(Request $req, Response $res, $args = [])
     {
+        if (!empty($GLOBALS['config']['throwThrottlingExceptionForUpload'])) {
+            return $res->throttlingException();
+        }
+
         $vaultName = $args['vaultName'];
         $multipartID = $args['multipartID'];
 

@@ -10,6 +10,10 @@ class InitiateMultipartUploadAction
 {
     public function __invoke(Request $req, Response $res, $args = [])
     {
+        if (!empty($GLOBALS['config']['throwThrottlingExceptionForUpload'])) {
+            return $res->throttlingException();
+        }
+
         $vaultName = $args['vaultName'];
 
         if (!($vault = Vault::get($vaultName))) {
