@@ -5,7 +5,7 @@ $app->get('/', function () { echo 'gsandbox'; });
 // Reset Sandbox data.
 $app->get('/sandbox/reset/{accessID}', \Gsandbox\Action\ResetSandboxAction::class);
 
-$app->group('/-', function () use ($app) {
+$app->group('/{accessId}', function () use ($app) {
 
     /********************/
     /* Vault Operations */
