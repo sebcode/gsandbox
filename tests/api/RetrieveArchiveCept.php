@@ -58,17 +58,17 @@ $I->seeResponseContainsJson([
 
 $I->sendGET("/-/vaults/testvault/jobs/$jobID/output");
 $I->seeResponseCodeIs(200);
-$this->assertTrue($I->grabResponse() === $data);
+$I->assertTrue($I->grabResponse() === $data);
 
 $I->haveHttpHeader('Range', 'bytes=0-1');
 $I->sendGET("/-/vaults/testvault/jobs/$jobID/output");
 $I->seeResponseCodeIs(206);
-$this->assertTrue($I->grabResponse() === 'AB');
+$I->assertTrue($I->grabResponse() === 'AB');
 
 $I->haveHttpHeader('Range', 'bytes=2-3');
 $I->sendGET("/-/vaults/testvault/jobs/$jobID/output");
 $I->seeResponseCodeIs(206);
-$this->assertTrue($I->grabResponse() === 'CD');
+$I->assertTrue($I->grabResponse() === 'CD');
 
 $I->haveHttpHeader('Content-Type', 'application/json');
 $I->sendPOST('/-/vaults/testvault/jobs', [
@@ -85,12 +85,12 @@ $I->seeResponseCodeIs(200);
 $I->haveHttpHeader('Range', '');
 $I->sendGET("/-/vaults/testvault/jobs/$jobID/output");
 $I->seeResponseCodeIs(200);
-$this->assertTrue($I->grabResponse() === substr($data, 1, (1024 * 1024) - 1));
+$I->assertTrue($I->grabResponse() === substr($data, 1, (1024 * 1024) - 1));
 
 $I->haveHttpHeader('Range', 'bytes=0-1');
 $I->sendGET("/-/vaults/testvault/jobs/$jobID/output");
 $I->seeResponseCodeIs(206);
-$this->assertTrue($I->grabResponse() === $data[1] . $data[2]);
+$I->assertTrue($I->grabResponse() === $data[1] . $data[2]);
 
 $I->sendDELETE("/-/vaults/testvault/archives/$archiveID");
 $I->seeResponseCodeIs(204);
