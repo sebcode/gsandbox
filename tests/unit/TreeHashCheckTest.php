@@ -20,7 +20,7 @@ class TreeHashCheckTest extends \PHPUnit_Framework_TestCase
 
         $size = (6 * $mb) + ($mb / 2);
         $this->assertTrue(TreeHashCheck::isTreeHashAligned($size, $mb * 6, $size - 1));
-        $this->assertFalse(TreeHashCheck::isTreeHashAligned($size, $mb * 7, ($mb * 8) - 1));
+        $this->assertFalse(TreeHashCheck::isTreeHashAligned($size, $mb * 7, ($mb * 9) - 1));
 
         $size = 100 * $mb;
         $this->assertTrue(TreeHashCheck::isTreeHashAligned($size, 16777216, 33554431));
