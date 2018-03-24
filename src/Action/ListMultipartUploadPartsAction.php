@@ -18,7 +18,7 @@ class ListMultipartUploadPartsAction
         }
 
         if (!($m = $vault->getMultipart($multipartID))) {
-            return $res->withStatus(404);
+            return $res->uploadIdNotFoundException($multipartID);
         }
 
         return $res->withJson($m->serializeArray(true), 200, JSON_PRETTY_PRINT);

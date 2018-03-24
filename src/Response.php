@@ -39,5 +39,14 @@ class Response extends \Slim\Http\Response
             'type' => 'Client',
         ], 400, JSON_PRETTY_PRINT);
     }
+
+    public function uploadIdNotFoundException($id)
+    {
+        return $this->withJson([
+            'code' => 'ResourceNotFoundException',
+            'message' => "The upload ID was not found: $id",
+            'type' => 'Client',
+        ], 404, JSON_PRETTY_PRINT);
+    }
 }
 

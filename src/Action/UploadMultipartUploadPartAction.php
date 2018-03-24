@@ -23,7 +23,7 @@ class UploadMultipartUploadPartAction
         }
 
         if (!($m = $vault->getMultipart($multipartID))) {
-            return $res->withStatus(404);
+            return $res->uploadIdNotFoundException($multipartID);
         }
 
         $contentHash = $req->getHeaderLine('x-amz-content-sha256');
