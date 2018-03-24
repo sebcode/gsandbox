@@ -31,6 +31,15 @@ class Response extends \Slim\Http\Response
         ], 400, JSON_PRETTY_PRINT);
     }
 
+    public function invalidHashException($computedHash, $expectedHash)
+    {
+        return $this->withJson([
+            'code' => 'InvalidSignatureException',
+            'message' => "The value passed in as x-amz-content-sha256 does not match the computed payload hash. Computed digest: $computedHash expected hash: $expectedHash",
+            'type' => 'Client',
+        ], 403, JSON_PRETTY_PRINT);
+    }
+
     public function limitExceededException()
     {
         return $this->withJson([

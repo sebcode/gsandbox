@@ -51,8 +51,7 @@ class UploadMultipartUploadPartAction
         $actualTreeHash = bin2hex($hash->complete());
 
         if ($treeHash !== $actualTreeHash) {
-            return $res->withStatus(400)
-                ->write("tree hash mismatch actual:$actualTreeHash exp:$treeHash");
+            return $res->invalidHashException($actualTreeHash, $treeHash);
         }
 
         if (isset($GLOBALS['config']['uploadThrottle'])) {
