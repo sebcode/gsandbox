@@ -36,7 +36,7 @@ class ListVaultsActionTest extends ActionTestBase
 
         $this->assertEquals(200, $res->getStatusCode());
 
-	    $actual = json_decode($res->getBody(), true);
+        $actual = json_decode($res->getBody(), true);
         $actual['VaultList'][0]['CreationDate'] = 'XXX';
         $this->assertEquals($exp, $actual);
 
@@ -55,7 +55,7 @@ class ListVaultsActionTest extends ActionTestBase
 
         $this->assertEquals(200, $res->getStatusCode());
 
-	    $actual = json_decode($res->getBody(), true);
+        $actual = json_decode($res->getBody(), true);
         $actual['VaultList'][0]['CreationDate'] = 'XXX';
         $actual['VaultList'][1]['CreationDate'] = 'XXX';
         $this->assertEquals($exp, $actual);

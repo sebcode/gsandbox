@@ -15,14 +15,20 @@ class Multipart extends VaultEntity
         $this->setParam('Description', $desc);
     }
 
-    public function serializeArray($withParts = false)
-    {
+    public function serializeArray(
+        $withParts = false,
+        $limit = 50,
+        $marker = 0
+    ) {
         $ret = [
             'MultipartUploadId' => $this->id,
-            'CreationDate' => $this->getCreationDate()->format(Vault::DATEFORMAT),
+            'CreationDate' => $this->getCreationDate()->format(
+                Vault::DATEFORMAT
+            ),
             'ArchiveDescription' => $this->getParam('Description'),
             'PartSizeInBytes' => (int) $this->getParam('PartSize'),
             'VaultARN' => $this->vault->getARN(),
+            'Marker' => null,
         ];
 
         if ($withParts) {
@@ -34,6 +40,20 @@ class Multipart extends VaultEntity
                 ];
             }
             $ret['Parts'] = $parts;
+
+            /* Pagination */
+            if (empty($marker)) {
+                $marker = 0;
+            }
+
+            $numParts = count($ret['Parts']);
+            $ret['Parts'] = array_slice($ret['Parts'], $marker, $limit);
+
+            if ($marker + $limit > $numParts - 1) {
+                $ret['Marker'] = null;
+            } else {
+                $ret['Marker'] = (string) ($marker + $limit);
+            }
         }
 
         return $ret;
@@ -71,8 +91,13 @@ class Multipart extends VaultEntity
         return $a;
     }
 
-    public function putPart($rangeFrom, $rangeTo, $contentLength, $putData, $treeHash)
-    {
+    public function putPart(
+        $rangeFrom,
+        $rangeTo,
+        $contentLength,
+        $putData,
+        $treeHash
+    ) {
         $requiredTargetSize = $rangeFrom + $contentLength;
         $file = $this->getFile('data');
 
@@ -108,7 +133,10 @@ class Multipart extends VaultEntity
         $metaPartsFile = $this->getFile('parts');
         $parts = $this->getParts();
         $parts["{$rangeFrom}-{$rangeTo}"] = $treeHash;
-        file_put_contents($metaPartsFile, '<?php return '.var_export($parts, true).';');
+        file_put_contents(
+            $metaPartsFile,
+            '<?php return ' . var_export($parts, true) . ';'
+        );
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($metaPartsFile);
         }

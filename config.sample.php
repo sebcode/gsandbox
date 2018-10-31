@@ -23,4 +23,9 @@ return [
   //'throwResourceNotFoundExceptionForGetJobOutput' => true,
 
   //'throwThrottlingExceptionForUpload' => true,
+
+  //'throwThrottlingExceptionForListMultiparts' => function () {
+  //  return rand(0, 4) === 0;
+  //},
+
 ];
