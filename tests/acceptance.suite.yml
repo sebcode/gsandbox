@@ -11,4 +11,4 @@ modules:
         - \Helper\Acceptance
     config:
         PhpBrowser:
-            url: http://gsandbox.localhost:8080/
+            url: http://gsandbox.test:8080/

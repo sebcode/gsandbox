@@ -3,6 +3,6 @@ modules:
     enabled:
         - Asserts
         - REST:
-            url: http://gsandbox.localhost:8080/
+            url: http://gsandbox.test:8080/
             depends: PhpBrowser
             part: Json
