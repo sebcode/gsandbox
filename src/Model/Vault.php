@@ -62,6 +62,7 @@ class Vault
 
     public function delete()
     {
+        $this->invalidateInventory();
         foreach ($this->getMultiparts() as $m) {
             $m->delete();
         }
